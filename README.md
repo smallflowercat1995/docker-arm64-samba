@@ -1,0 +1,51 @@
+# docker-arm64-samba
+## dockerhub
+<a href="https://hub.docker.com/r/smallflowercat1995/debian-samba" title="debian-samba">https://hub.docker.com/r/smallflowercat1995/debian-samba</a>
+## 描述
+    这是一个 arm64 的 samba 构建材料  
+    闲暇之余可以通过树莓派上传下载文件  
+    samba 是个不错的工具  
+    配置文件 docker-compose.yml 这个可以自己按照需求修改  
+    整个项目不难，看看配置文件，看看脚本，再看看目录结构，肯定就理解了  
+
+    .                                            # 根目录  
+    ├── docker-compose.yml                       # 这个是 docker-compose.yml 配置文件   
+    ├── Dockerfile                               # 这个是 docker 构建文件  
+    └── package                                  # 这个是脚本、配置文件所在目录  
+        ├── install.sh                           # 这个是构建镜像的时候在容器内执行流程的脚本   
+        ├── run_samba                            # 这个是启动 samba 的脚本  
+        └── samba.bak                            # 这个是 samba 默认配置目录，也可以按照需求配置  
+            ├── smb.conf                         # 这个是 samba 默认配置文件 默认用户名 root 
+            └── smbpasswd                        # 这个是 samba 默认密码文件 默认密码 123456   
+
+## 依赖
+    arm64 设备
+    docker 程序
+    docker-compose python程序
+    我目前能想到的必要程序就这些吧
+
+## 构建命令
+    # clone 项目
+    git clone https://github.com/smallflowercat1995/docker-arm64-samba.git
+    # 进入目录
+    cd docker-arm64-samba
+    # 无缓存构建
+    docker-compose build --no-cache
+
+## 构建完成后 后台启动
+    docker-compose up -d
+    
+## 想要修改密码怎么办？
+    # 进入目录
+    cd docker-arm64-samba
+    # 进入容器
+    docker-compose exec samba-app bash
+    # 修改密码 需输入两次 密码不会显示属于正常现象 密码配置文件会保存到 /etc/samba/smbpasswd
+    smbpasswd -a root
+    
+
+## 感谢
+    恩山大佬 liaohcai：https://www.right.com.cn/forum/thread-8233215-1-1.html
+
+## 参考
+    分享openwrt的samba4配置文件无视luci界面：https://www.right.com.cn/forum/thread-8233215-1-1.html  

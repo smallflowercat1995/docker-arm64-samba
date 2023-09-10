@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+if ! [ -f /etc/samba/smb.conf -a -f /etc/samba/smbpasswd -a -f /etc/samba/gdbcommands ]; then
+    echo 'file is not found!'
+    rm -rfv /etc/samba/*
+    cp -rv /etc/samba.bak/* /etc/samba/
+    /etc/init.d/smbd start ; tail -f /var/log/samba/log.smbd
+else
+    /etc/init.d/smbd start ; tail -f /var/log/samba/log.smbd
+fi

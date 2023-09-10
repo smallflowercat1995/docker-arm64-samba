@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  samba-app:
+    build: .
+    image: smallflowercat1995/debian-samba:latest
+    container_name: debian-samba-latest-container
+    restart: always
+    ports:
+      - "139:139"
+      - "445:445"
+    volumes:
+      - ../docker-container/samba/conf:/etc/samba
+      - ../docker-container:/sharedir
+    networks:
+        - app_net
+networks:
+  app_net:
+    driver: bridge
