@@ -9,8 +9,8 @@ services:
       - "139:139"
       - "445:445"
     volumes:
-      - /mnt/sda1/docker-container/samba/conf:/etc/samba
-      - /mnt/sda1/docker-container:/sharedir
+      - ./docker-container/samba/conf:/etc/samba
+      - ./docker-container:/sharedir
     networks:
         - app_net
 networks:
