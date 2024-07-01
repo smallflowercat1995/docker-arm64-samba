@@ -1,0 +1,34 @@
+services:
+  alpine-samba-app:
+    build:
+      context: .
+    command:
+      - bash
+      - run_samba
+    platform: linux/arm64/v8
+    container_name: alpine-samba-arm64v8-container
+    environment:
+      - USERS=root
+      - PASSWORD=123456
+      #- http_proxy=http://IP:PORT
+      #- https_proxy=http://IP:PORT
+      #- all_proxy=socks5://IP:PORT
+    image: smallflowercat1995/alpine-samba:arm64v8
+    #network_mode: bridge
+    networks:
+        - app_net
+    ports:
+      - "139:139"
+      - "445:445"
+    privileged: true
+    restart: "no"
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+    volumes:
+      - $HOME/docker-container/samba/conf:/etc/samba
+      - $HOME/docker-container:/sharedir
+networks:
+  app_net:
+    driver: bridge

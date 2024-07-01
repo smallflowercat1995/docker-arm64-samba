@@ -1,0 +1,35 @@
+#!/bin/bash
+# 打印检查环境是否导入
+# 判读用户名环境变量 USERS 是否存在
+if [[ -z "$USERS" ]]; then
+    echo "set 'USERS=root' for samba"
+    export USERS=root
+fi
+
+# 判读用户名环境变量 PASSWORD 是否存在
+if [[ -z "$PASSWORD" ]]; then
+    echo "set 'PASSWORD=123456' for samba"
+    export PASSWORD=123456
+fi
+
+# echo "$USERS\n$PASSWORD"
+
+# 判断用户是否自定义了配置文件？
+if [ ! -f /etc/samba/smb.conf ]; then
+    cp -fv /etc/samba.bak/smb.conf /etc/samba/
+    sed -i 's; = replace; = '${USERS}';g' /etc/samba/smb.conf
+    echo -e '\n' | testparm
+fi
+
+# 判断用户是否自定义了密码文件？
+if [ ! -f /etc/samba/smbpasswd ]; then
+    adduser -G "${USERS}" "${USERS}"
+    echo "$USERS ALL=(ALL) ALL" > /etc/sudoers.d/$USERS && chmod 0440 /etc/sudoers.d/$USERS
+    usermod -aG ${USERS},$(id -G $USER | sed 's; ;,;g') ${USERS}
+    id ${USERS}
+    echo "$USERS:$PASSWORD" | chpasswd
+    echo -e "$PASSWORD\n$PASSWORD" | passwd "$USERS"
+    echo -e "$PASSWORD\n$PASSWORD" | smbpasswd -a $USERS
+fi
+
+/usr/sbin/smbd ; tail -f /var/log/samba/log.smbd
